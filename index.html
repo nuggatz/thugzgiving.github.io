@@ -21,39 +21,6 @@
     padding: 24px 20px;
     overflow-x: hidden;
     position: relative;
-    cursor: default;
-  }
-
-  /* subtle animated gradient overlay */
-  body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle at 50% 50%, rgba(140, 255, 128, 0.03) 0%, transparent 70%);
-    pointer-events: none;
-    z-index: 0;
-    animation: breathe 8s ease-in-out infinite;
-  }
-
-  @keyframes breathe {
-    0%, 100% { opacity: 0.3; }
-    50% { opacity: 0.8; }
-  }
-
-  /* scanline effect */
-  body::after {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: repeating-linear-gradient(0deg, rgba(0,0,0,0.1) 0px, rgba(0,0,0,0.1) 2px, transparent 2px, transparent 6px);
-    pointer-events: none;
-    z-index: 2;
   }
 
   .container {
@@ -68,28 +35,10 @@
   a {
     color: #eaeaea;
     text-decoration: none;
-    transition: all 0.2s ease;
-    position: relative;
   }
   
   a:hover {
-    text-decoration: none;
-    color: #8aff80;
-  }
-  
-  a::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 0%;
-    height: 1px;
-    background: #8aff80;
-    transition: width 0.2s ease;
-  }
-  
-  a:hover::after {
-    width: 100%;
+    text-decoration: underline;
   }
 
   .item {
@@ -120,27 +69,6 @@
     50% { opacity: 0; }
   }
 
-  /* glitch effect for the name */
-  .glitch-text {
-    position: relative;
-    transition: all 0.1s ease;
-  }
-  
-  .glitch-text:hover {
-    animation: glitch 0.3s infinite;
-    cursor: default;
-  }
-  
-  @keyframes glitch {
-    0% { transform: translate(0); }
-    20% { transform: translate(-1px, 1px); }
-    40% { transform: translate(-1px, -1px); }
-    60% { transform: translate(1px, 1px); }
-    80% { transform: translate(1px, -1px); }
-    100% { transform: translate(0); }
-  }
-
-  /* BOUNCING IMAGE */
   .bouncing-image {
     position: fixed;
     width: 80px;
@@ -148,17 +76,10 @@
     z-index: 100;
     pointer-events: auto;
     cursor: pointer;
-    filter: grayscale(100%) brightness(0.9) contrast(1.2);
-    transition: filter 0.2s ease, transform 0.1s ease;
     image-rendering: crisp-edges;
   }
-  
-  .bouncing-image:hover {
-    filter: grayscale(0%) brightness(1) contrast(1);
-    transform: scale(1.05);
-  }
 
-  /* responsive adjustments */
+  /* responsive */
   @media (max-width: 768px) {
     body {
       padding: 20px 16px;
@@ -217,7 +138,7 @@
 <body>
 
 <!-- BOUNCING IMAGE -->
-<img id="bouncingImage" class="bouncing-image" alt="bouncing chaos">
+<img id="bouncingImage" class="bouncing-image" alt="bouncing">
 
 <div class="container">
   <!-- nav -->
@@ -226,14 +147,14 @@
     <a href="photos.html">film</a>
   </div>
 
-  <!-- main name with glitch -->
-  <div class="item name-large glitch-text" style="top:140px; left:35%; font-size:28px;">
+  <!-- main name -->
+  <div class="item name-large" style="top:140px; left:35%; font-size:28px;">
     thugz<span class="accent">g</span>iving
   </div>
 
-  <!-- description with typing -->
+  <!-- description -->
   <div class="item small description" style="top:190px; left:35%;">
-    <span id="changing-text">second year cybersecurity student</span><span class="cursor"></span>
+    second year cybersecurity student<span class="cursor"></span>
   </div>
 
   <!-- socials -->
@@ -249,84 +170,21 @@
 </div>
 
 <script>
-  // ========== TYPING TEXT ANIMATION ==========
-  const phrases = [
-    "second year cybersecurity student",
-    "self proclaimed film nerd",
-    "reselling enthusiast",
-    "homelab tinkerer",
-    "just existing",
-    "thugzgiving"
-  ];
-  
-  let phraseIndex = 0;
-  let charIndex = 0;
-  let isDeleting = false;
-  const element = document.getElementById("changing-text");
-  const typingSpeed = 100;
-  const deletingSpeed = 50;
-  const pauseBetween = 2000;
-  
-  function typeEffect() {
-    const currentPhrase = phrases[phraseIndex];
-    
-    if (isDeleting) {
-      charIndex--;
-      element.textContent = currentPhrase.substring(0, charIndex);
-      
-      if (charIndex === 0) {
-        isDeleting = false;
-        phraseIndex = (phraseIndex + 1) % phrases.length;
-        setTimeout(typeEffect, 500);
-      } else {
-        setTimeout(typeEffect, deletingSpeed);
-      }
-    } else {
-      charIndex++;
-      element.textContent = currentPhrase.substring(0, charIndex);
-      
-      if (charIndex === currentPhrase.length) {
-        isDeleting = true;
-        setTimeout(typeEffect, pauseBetween);
-      } else {
-        setTimeout(typeEffect, typingSpeed);
-      }
-    }
-  }
-  
-  setTimeout(typeEffect, 1000);
-  
-  let clickCount = 0;
-  const nameElement = document.querySelector(".glitch-text");
-  nameElement.addEventListener("click", () => {
-    clickCount++;
-    if (clickCount === 5) {
-      document.body.style.backgroundColor = "#1a1f20";
-      setTimeout(() => {
-        document.body.style.backgroundColor = "#0b0f10";
-      }, 300);
-      clickCount = 0;
-    }
-  });
-  
 
-  const imageUrl = "images/skull.jpg"; 
-
+ 
+  const imageUrl = "images/skull.jpg";
   
   const img = document.getElementById("bouncingImage");
   img.src = imageUrl;
   
-  // dimensions
   let imgWidth = 80;
   let imgHeight = 80;
   
-  // position & velocity
   let posX = window.innerWidth / 2;
   let posY = window.innerHeight / 2;
   let velX = 2.2;
   let velY = 1.8;
   
-  // update image dimensions after load
   img.onload = () => {
     imgWidth = img.offsetWidth;
     imgHeight = img.offsetHeight;
@@ -335,7 +193,6 @@
   function updateBounce() {
     if (!img) return;
     
-    // get viewport dimensions
     const maxX = window.innerWidth - imgWidth - 20;
     const maxY = window.innerHeight - imgHeight - 20;
     const minX = 10;
@@ -347,37 +204,20 @@
     if (posX >= maxX) {
       posX = maxX;
       velX = -velX;
-      img.style.filter = "grayscale(50%) brightness(1.2)";
-      setTimeout(() => {
-        img.style.filter = "grayscale(100%) brightness(0.9) contrast(1.2)";
-      }, 100);
     }
     if (posX <= minX) {
       posX = minX;
       velX = -velX;
-      img.style.filter = "grayscale(50%) brightness(1.2)";
-      setTimeout(() => {
-        img.style.filter = "grayscale(100%) brightness(0.9) contrast(1.2)";
-      }, 100);
     }
     if (posY >= maxY) {
       posY = maxY;
       velY = -velY;
-      img.style.filter = "grayscale(50%) brightness(1.2)";
-      setTimeout(() => {
-        img.style.filter = "grayscale(100%) brightness(0.9) contrast(1.2)";
-      }, 100);
     }
     if (posY <= minY) {
       posY = minY;
       velY = -velY;
-      img.style.filter = "grayscale(50%) brightness(1.2)";
-      setTimeout(() => {
-        img.style.filter = "grayscale(100%) brightness(0.9) contrast(1.2)";
-      }, 100);
     }
     
-    // apply position
     img.style.left = posX + "px";
     img.style.top = posY + "px";
     
@@ -389,15 +229,6 @@
     const maxY = window.innerHeight - imgHeight - 20;
     posX = Math.min(Math.max(posX, 10), maxX);
     posY = Math.min(Math.max(posY, 10), maxY);
-  });
-  
-  img.addEventListener("click", () => {
-    velX = (Math.random() - 0.5) * 5 + (velX > 0 ? 2 : -2);
-    velY = (Math.random() - 0.5) * 5 + (velY > 0 ? 2 : -2);
-    img.style.transform = "scale(0.95)";
-    setTimeout(() => {
-      img.style.transform = "scale(1)";
-    }, 100);
   });
   
   window.addEventListener("load", () => {
