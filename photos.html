@@ -167,18 +167,10 @@
 </div>
 
 <script>
-// ============================================
-// CONFIGURATION - EDIT THESE!
-// ============================================
 
-// Folder where your images are stored (relative path)
-// Example: "photos/" or "images/" or "gallery/"
-const IMAGE_FOLDER = "photos/";
+ 
+const IMAGE_FOLDER = "images/";
 
-// Supported image extensions
-const IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".png", ".gif", ".webp", ".JPG", ".JPEG", ".PNG"];
-
-// Your pool of random captions (add/remove as you like)
 const CAPTION_POOL = [
   " ",
   "\"god\"",
@@ -199,70 +191,39 @@ const CAPTION_POOL = [
   "\"just because\""
 ];
 
-// ============================================
-// CODE - DON'T EDIT BELOW UNLESS YOU KNOW WHAT YOU'RE DOING
-// ============================================
+
+const imageFilenames = [
+    "IMG_0049.JPG",
+    "IMG_0070.JPG",
+    "P1110701.JPG",
+    "IMG_0057.JPG",
+    "IMG_0054.JPG",
+    "IMG_0029.JPG"
+];
+
 
 let images = [];
 let index = 0;
-let imageCaptions = new Map(); // store random caption per image
+let imageCaptions = new Map();
 
-async function loadImagesFromFolder() {
-    const loadingMsg = document.getElementById("caption");
-    if (loadingMsg) loadingMsg.innerText = "loading images...";
+function loadImages() {
+    // Build full paths to the images folder
+    images = imageFilenames.map(filename => IMAGE_FOLDER + filename);
     
-    try {
-        // Fetch a list of files from the server using a simple PHP or directory listing?
-        // Since we can't reliably list files with just client-side JS, we use a different approach:
-        // We'll try to load sequential numbered images or use a manifest file.
-        // APPROACH: Try to load images by checking existence (common pattern)
-        // But easier: Use a JSON manifest if you have one, OR manual array
-        // For auto-detection, I'll implement a "try loading" method that tests common patterns
-        
-        // Option 1: Look for image names if you have a pattern (like image1.jpg, image2.jpg)
-        // Option 2: Use a text file list (images.txt) that you maintain
-        // Option 3: Manual array but with easy editing (I'll provide the best solution)
-        
-        // Since pure client-side JS cannot list directory contents without server help,
-        // here's the most practical approach: you maintain a simple list of filenames,
-        // BUT the system will auto-apply random captions and you never touch the array again.
-        
-        // >>> EASY FIX: Just list your image filenames here once, and done <<<
-        // The gallery will handle all captions automatically and randomly.
-        // Add or remove filenames as you add/remove photos.
-        
-        const imageFilenames = [
-            "IMG_0049.JPG",
-            "IMG_0070.JPG",
-            "P1110701.JPG",
-            "IMG_0057.JPG",
-            "IMG_0054.JPG",
-            "IMG_0029.JPG"
-        ];
-        
-        // Build full paths
-        images = imageFilenames.map(filename => IMAGE_FOLDER + filename);
-        
-        // Assign random captions to each image
-        for (let i = 0; i < images.length; i++) {
-            const randomCaption = CAPTION_POOL[Math.floor(Math.random() * CAPTION_POOL.length)];
-            imageCaptions.set(images[i], randomCaption);
-        }
-        
-        if (images.length === 0) {
-            document.getElementById("caption").innerText = "⚠️ no images found — add filenames to imageFilenames array";
-            document.getElementById("counter").innerText = ".err";
-            return;
-        }
-        
-        // Preload first image and update
-        index = 0;
-        updateGallery();
-        
-    } catch (error) {
-        console.error("Error loading images:", error);
-        document.getElementById("caption").innerText = "⚠️ error loading images — check console";
+    // Assign random captions to each image
+    for (let i = 0; i < images.length; i++) {
+        const randomCaption = CAPTION_POOL[Math.floor(Math.random() * CAPTION_POOL.length)];
+        imageCaptions.set(images[i], randomCaption);
     }
+    
+    if (images.length === 0) {
+        document.getElementById("caption").innerText = "⚠️ no images — add filenames to imageFilenames";
+        document.getElementById("counter").innerText = ".err";
+        return;
+    }
+    
+    index = 0;
+    updateGallery();
 }
 
 function updateGallery() {
@@ -294,8 +255,7 @@ function prevImage() {
     updateGallery();
 }
 
-// Start the gallery
-loadImagesFromFolder();
+loadImages();
 </script>
 </body>
 </html>
