@@ -2,57 +2,151 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>proj</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>proj — thugzgiving</title>
 
 <style>
-body {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
     background: #0b0f10;
     color: #eaeaea;
     font-family: monospace;
-    height: 150vh;
+    min-height: 100vh;
     margin: 0;
+    padding: 24px 20px;
     overflow-x: hidden;
-}
+  }
 
-a {
+  .container {
+    max-width: 1000px;
+    margin: 0 auto;
+    position: relative;
+    width: 100%;
+  }
+
+  a {
     color: #eaeaea;
     text-decoration: none;
-}
-a:hover {
+  }
+  a:hover {
     text-decoration: underline;
-}
+  }
 
-.item {
+  .item {
     position: absolute;
     font-size: 14px;
-}
+  }
 
-.small { font-size: 12px; opacity: 0.7; }
+  .small {
+    font-size: 12px;
+    opacity: 0.7;
+  }
+
+  .project-card {
+    margin: 100px 0 40px;
+    width: 100%;
+    max-width: 500px;
+  }
+
+  .project-card img {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin-bottom: 12px;
+    border-radius: 2px;
+  }
+
+  .project-desc {
+    font-size: 12px;
+    opacity: 0.8;
+    line-height: 1.5;
+  }
+
+  /* responsive */
+  @media (max-width: 768px) {
+    body {
+      padding: 20px 16px;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .item {
+      position: relative !important;
+      left: auto !important;
+      top: auto !important;
+      text-align: center;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      margin-bottom: 30px;
+    }
+    .title-proj {
+      font-size: 22px;
+      margin: 20px 0;
+      text-align: center;
+    }
+    .project-card {
+      margin: 20px 0;
+      width: 100%;
+    }
+  }
+
+  @media (min-width: 769px) and (max-width: 1024px) {
+    .nav-links {
+      left: 70% !important;
+    }
+    .title-proj {
+      left: 12% !important;
+    }
+    .project-card {
+      margin-left: 12%;
+    }
+  }
+
+  @media (min-width: 769px) {
+    .project-card {
+      position: absolute;
+      top: 220px;
+      left: 28%;
+      width: 320px;
+    }
+    .title-proj {
+      position: absolute;
+      top: 140px;
+      left: 30%;
+      font-size: 22px;
+    }
+  }
 </style>
 </head>
 <body>
-
-<!-- nav -->
-<div class="item small" style="top:40px; left:55%;">
+<div class="container">
+  <!-- nav -->
+  <div class="item small nav-links" style="top:40px; left:55%;">
     <a href="index.html">home</a> &nbsp;
     <a href="projects.html">proj</a> &nbsp;
     <a href="photos.html">film</a>
-</div>
+  </div>
 
-<!-- title -->
-<div class="item" style="top:140px; left:30%; font-size:22px;">
-    proj
-</div>
+  <!-- title -->
+  <div class="title-proj" style="font-size:22px;">proj</div>
 
-<!-- projects (loose, not aligned perfectly) -->
-<!-- project 1 -->
-<div class="item" style="top:220px; left:28%; width:300px;">
-    <img src="project_01.jpg" style="width:100%; display:block; margin-bottom:8px;">
-    <div class="small">
-        project_01 — homelab made from an old pc, runs proxmox and i use it mainly for self hosting and my own cloud
+  <!-- project -->
+  <div class="project-card">
+    <img src="project_01.jpg" alt="homelab project">
+    <div class="project-desc">
+      project_01 — homelab made from an old pc, runs proxmox and i use it mainly for self hosting and my own cloud
     </div>
+  </div>
 </div>
-
 </body>
 </html>
