@@ -2,121 +2,300 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>film</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>film — thugzgiving</title>
 
 <style>
-body {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
     background: #0b0f10;
     color: #eaeaea;
     font-family: monospace;
-    height: 150vh;
+    min-height: 100vh;
     margin: 0;
+    padding: 20px;
     overflow-x: hidden;
-}
+  }
 
-a {
+  .container {
+    max-width: 1000px;
+    margin: 0 auto;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 90vh;
+  }
+
+  a {
     color: #eaeaea;
     text-decoration: none;
-}
-a:hover {
+  }
+  a:hover {
     text-decoration: underline;
-}
+  }
 
-.item {
+  .item {
     position: absolute;
     font-size: 14px;
-}
+  }
 
-.small { font-size: 12px; opacity: 0.7; }
+  .small {
+    font-size: 12px;
+    opacity: 0.7;
+  }
 
-img {
-    max-width: 700px;
-    width: 100%;
+  img {
+    max-width: 100%;
+    height: auto;
     display: block;
-}
+    border-radius: 2px;
+  }
+
+  .gallery-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin: 80px 0 40px;
+  }
+
+  .nav-controls {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    margin: 30px 0;
+    width: 100%;
+  }
+
+  .nav-btn {
+    font-size: 24px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: #eaeaea;
+    font-family: monospace;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+    padding: 10px 20px;
+  }
+  .nav-btn:hover {
+    opacity: 1;
+    text-decoration: underline;
+  }
+
+  .caption {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 12px;
+    opacity: 0.8;
+    font-style: italic;
+  }
+
+  .counter {
+    font-size: 12px;
+    opacity: 0.6;
+    margin-bottom: 10px;
+  }
+
+  .loading {
+    text-align: center;
+    padding: 40px;
+    opacity: 0.7;
+  }
+
+  @media (max-width: 768px) {
+    body {
+      padding: 16px;
+    }
+    .item {
+      position: relative !important;
+      left: auto !important;
+      top: auto !important;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      margin-bottom: 20px;
+      position: relative !important;
+    }
+    .gallery-wrapper {
+      margin-top: 20px;
+    }
+    .nav-controls {
+      gap: 40px;
+    }
+  }
+
+  @media (min-width: 769px) {
+    .nav-links {
+      position: absolute;
+      top: 40px;
+      left: 55%;
+    }
+  }
 </style>
 </head>
 <body>
-
-<!-- nav -->
-<div class="item small" style="top:40px; left:55%;">
+<div class="container">
+  <!-- nav -->
+  <div class="item small nav-links">
     <a href="index.html">home</a> &nbsp;
     <a href="projects.html">proj</a> &nbsp;
     <a href="photos.html">film</a>
-</div>
+  </div>
 
-<!-- counter -->
-<div class="item small" id="counter" style="top:120px; left:48%;">
-    .000
-</div>
+  <div class="gallery-wrapper">
+    <div class="counter" id="counter">.---</div>
 
-<!-- left nav -->
-<div class="item" style="top:320px; left:20%; cursor:pointer;" onclick="prevImage()">
-    L
-</div>
+    <img id="galleryImage" src="" alt="gallery image" style="max-width: 90%; max-height: 60vh; object-fit: contain;">
 
-<!-- image -->
-<div class="item" style="top:180px; left:30%;">
-    <img id="galleryImage">
-</div>
+    <div class="nav-controls">
+      <button class="nav-btn" onclick="prevImage()">← L</button>
+      <button class="nav-btn" onclick="nextImage()">R →</button>
+    </div>
 
-<!-- right nav -->
-<div class="item" style="top:320px; left:78%; cursor:pointer;" onclick="nextImage()">
-    R
-</div>
-
-<!-- caption -->
-<div class="item small" id="caption" style="top:600px; left:42%;">
+    <div class="caption" id="caption"></div>
+  </div>
 </div>
 
 <script>
-const images = [
-    {
-        src: "IMG_0049.JPG",
-        caption: ' '
-    },
-    {
-        src: "IMG_0070.JPG",
-        caption: '"god"'
-    },
-    {
-        src: "P1110701.JPG",
-        caption: '"another moment"'
-    },
-    {
-        src: "IMG_0057.JPG",
-        caption: ' '
-    },
-    {
-        src: "IMG_0054.JPG",
-        caption: '"so indie sleaze dude"'
-    },
-    {
-        src: "IMG_0029.JPG",
-        caption: ' '
-    }
+// ============================================
+// CONFIGURATION - EDIT THESE!
+// ============================================
+
+// Folder where your images are stored (relative path)
+// Example: "photos/" or "images/" or "gallery/"
+const IMAGE_FOLDER = "photos/";
+
+// Supported image extensions
+const IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".png", ".gif", ".webp", ".JPG", ".JPEG", ".PNG"];
+
+// Your pool of random captions (add/remove as you like)
+const CAPTION_POOL = [
+  " ",
+  "\"god\"",
+  "\"another moment\"",
+  "\"so indie sleaze dude\"",
+  "\"3am thoughts\"",
+  "\"nothing really matters\"",
+  "\"just existing\"",
+  "\"film never lies\"",
+  "\"a memory i kept\"",
+  "\"blurred lines\"",
+  "\"waiting for something\"",
+  "\"somewhere, nowhere\"",
+  "\"the light was good\"",
+  "\"wish you were here\"",
+  "\"found this one\"",
+  "\"no filter, no meaning\"",
+  "\"just because\""
 ];
 
+// ============================================
+// CODE - DON'T EDIT BELOW UNLESS YOU KNOW WHAT YOU'RE DOING
+// ============================================
+
+let images = [];
 let index = 0;
+let imageCaptions = new Map(); // store random caption per image
+
+async function loadImagesFromFolder() {
+    const loadingMsg = document.getElementById("caption");
+    if (loadingMsg) loadingMsg.innerText = "loading images...";
+    
+    try {
+        // Fetch a list of files from the server using a simple PHP or directory listing?
+        // Since we can't reliably list files with just client-side JS, we use a different approach:
+        // We'll try to load sequential numbered images or use a manifest file.
+        // APPROACH: Try to load images by checking existence (common pattern)
+        // But easier: Use a JSON manifest if you have one, OR manual array
+        // For auto-detection, I'll implement a "try loading" method that tests common patterns
+        
+        // Option 1: Look for image names if you have a pattern (like image1.jpg, image2.jpg)
+        // Option 2: Use a text file list (images.txt) that you maintain
+        // Option 3: Manual array but with easy editing (I'll provide the best solution)
+        
+        // Since pure client-side JS cannot list directory contents without server help,
+        // here's the most practical approach: you maintain a simple list of filenames,
+        // BUT the system will auto-apply random captions and you never touch the array again.
+        
+        // >>> EASY FIX: Just list your image filenames here once, and done <<<
+        // The gallery will handle all captions automatically and randomly.
+        // Add or remove filenames as you add/remove photos.
+        
+        const imageFilenames = [
+            "IMG_0049.JPG",
+            "IMG_0070.JPG",
+            "P1110701.JPG",
+            "IMG_0057.JPG",
+            "IMG_0054.JPG",
+            "IMG_0029.JPG"
+        ];
+        
+        // Build full paths
+        images = imageFilenames.map(filename => IMAGE_FOLDER + filename);
+        
+        // Assign random captions to each image
+        for (let i = 0; i < images.length; i++) {
+            const randomCaption = CAPTION_POOL[Math.floor(Math.random() * CAPTION_POOL.length)];
+            imageCaptions.set(images[i], randomCaption);
+        }
+        
+        if (images.length === 0) {
+            document.getElementById("caption").innerText = "⚠️ no images found — add filenames to imageFilenames array";
+            document.getElementById("counter").innerText = ".err";
+            return;
+        }
+        
+        // Preload first image and update
+        index = 0;
+        updateGallery();
+        
+    } catch (error) {
+        console.error("Error loading images:", error);
+        document.getElementById("caption").innerText = "⚠️ error loading images — check console";
+    }
+}
 
 function updateGallery() {
-    document.getElementById("galleryImage").src = images[index].src;
-    document.getElementById("caption").innerText = images[index].caption;
-    document.getElementById("counter").innerText =
-        "." + String(index).padStart(3, "0");
+    if (images.length === 0) return;
+    
+    const imgElement = document.getElementById("galleryImage");
+    if (imgElement) {
+        imgElement.src = images[index];
+        imgElement.alt = "image " + (index + 1);
+    }
+    
+    const caption = imageCaptions.get(images[index]) || " ";
+    const captionEl = document.getElementById("caption");
+    if (captionEl) captionEl.innerText = caption;
+    
+    const counterEl = document.getElementById("counter");
+    if (counterEl) counterEl.innerText = "." + String(index + 1).padStart(3, "0");
 }
 
 function nextImage() {
+    if (images.length === 0) return;
     index = (index + 1) % images.length;
     updateGallery();
 }
 
 function prevImage() {
+    if (images.length === 0) return;
     index = (index - 1 + images.length) % images.length;
     updateGallery();
 }
-</script>
 
+// Start the gallery
+loadImagesFromFolder();
+</script>
 </body>
 </html>
