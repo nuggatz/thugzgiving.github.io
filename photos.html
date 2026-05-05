@@ -2,111 +2,109 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Photo Gallery</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>film</title>
+
 <style>
-  body {
-    margin: 0;
+body {
+    background: #0b0f10;
+    color: #eaeaea;
     font-family: monospace;
-    background: #f5f5f5;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
+    height: 150vh;
+    margin: 0;
+    overflow-x: hidden;
+}
 
-  .container {
-    text-align: center;
-  }
+a {
+    color: #eaeaea;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
 
-  .image-wrapper {
-    position: relative;
-    display: inline-block;
-  }
-
-  img {
-    max-width: 800px;
-    width: 100%;
-    height: auto;
-    display: block;
-  }
-
-  .nav {
+.item {
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 20px;
-    cursor: pointer;
-    user-select: none;
-    color: #333;
-  }
+    font-size: 14px;
+}
 
-  .left {
-    left: -40px;
-  }
+.small { font-size: 12px; opacity: 0.7; }
 
-  .right {
-    right: -40px;
-  }
-
-  .counter {
-    margin-bottom: 10px;
-    color: #555;
-  }
-
-  .caption {
-    margin-top: 10px;
-    color: #333;
-  }
+img {
+    max-width: 700px;
+    width: 100%;
+    display: block;
+}
 </style>
 </head>
 <body>
 
-<div class="container">
-  <div class="counter" id="counter">.000</div>
+<!-- nav -->
+<div class="item small" style="top:40px; left:55%;">
+    <a href="index.html">home</a> &nbsp;
+    <a href="projects.html">proj</a> &nbsp;
+    <a href="photos.html">film</a>
+</div>
 
-  <div class="image-wrapper">
-    <div class="nav left" onclick="prevImage()">L</div>
+<!-- counter -->
+<div class="item small" id="counter" style="top:120px; left:48%;">
+    .000
+</div>
+
+<!-- left nav -->
+<div class="item" style="top:320px; left:20%; cursor:pointer;" onclick="prevImage()">
+    L
+</div>
+
+<!-- image -->
+<div class="item" style="top:180px; left:30%;">
     <img id="galleryImage" src="image1.jpg">
-    <div class="nav right" onclick="nextImage()">R</div>
-  </div>
+</div>
 
-  <div class="caption" id="caption">"you must see the hurt"</div>
+<!-- right nav -->
+<div class="item" style="top:320px; left:78%; cursor:pointer;" onclick="nextImage()">
+    R
+</div>
+
+<!-- caption -->
+<div class="item small" id="caption" style="top:600px; left:42%;">
+    "you must see the hurt"
 </div>
 
 <script>
-  const images = [
+const images = [
     {
-      src: "image1.jpg",
-      caption: '"you must see the hurt"'
+        src: "image1.jpg",
+        caption: '"you must see the hurt"'
     },
     {
-      src: "image2.jpg",
-      caption: '"another moment captured"'
+        src: "image2.jpg",
+        caption: '"memory fades slowly"'
     },
     {
-      src: "image3.jpg",
-      caption: '"memory fades slowly"'
+        src: "image3.jpg",
+        caption: '"another moment"'
     }
-  ];
+];
 
-  let index = 0;
+let index = 0;
 
-  function updateGallery() {
+function updateGallery() {
     document.getElementById("galleryImage").src = images[index].src;
     document.getElementById("caption").innerText = images[index].caption;
     document.getElementById("counter").innerText =
-      "." + String(index).padStart(3, "0");
-  }
+        "." + String(index).padStart(3, "0");
+}
 
-  function nextImage() {
+function nextImage() {
     index = (index + 1) % images.length;
     updateGallery();
-  }
+}
 
-  function prevImage() {
+function prevImage() {
     index = (index - 1 + images.length) % images.length;
     updateGallery();
-  }
+}
 </script>
 
 </body>
